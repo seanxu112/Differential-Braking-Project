@@ -15,8 +15,11 @@ Fr = @(ar) m*(b/(a+b))*A*sin(C*atan(B*ar));
 
 reff = 0.3;         % Effective Radius of Wheel  %%%%%% Need to Change %%%%%
 miu = 0.2;          % Maximum tire–road friction coecient   %%%%% Need to Change %%%%%%
-Cf =                % Front tyre cornering tyre stiffness
-Cr =                % Rear tyre cornering tyre stiffness
-L  =                % Wheelbase
+Cf = 1;               % Front tyre cornering tyre stiffness
+Cr = 1;               % Rear tyre cornering tyre stiffness
+L  = 1;               % Wheelbase
 Kus = m*g/L*(b/Cf - a/Cr);
 uch = sqrt(g*L/Kus);        % Characteristic Veolocity
+
+KBf = 1;
+KBr = 1;
