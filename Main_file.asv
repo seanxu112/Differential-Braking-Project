@@ -5,7 +5,7 @@ clear all
 
 delta = @(t) deg2rad(1);
 %delta = @(t) ...;
-x0 = [10 2 0 0 0 0]';
+x0 = [10 0 0 0 0 0]';
 tspan = [0 10];
 u = zeros(2,1);
 Ts = 100;
@@ -19,6 +19,5 @@ ylim([-50, 150])
 title('Position')
 hold on
 plot(x0(4),x0(5), '*')
-legend('Initial Position')
 figure()
 plot(t,x(:,4))

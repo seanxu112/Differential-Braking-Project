@@ -7,8 +7,13 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     phi_dot = x(3);     %Yaw Rate
     d = 5;          %Track Width %%%%%%%%%%% Need to Change %%%%%%%
     %delta =         %Some Designed input of steering angle
+    V = sqrt(x(1)^2 + x(2)^2);
+    beta = atan(x(2)/x(1));
+    if (isnan(beta))
+        beta = 0;
+    end
     
-    xdot = zeros(3,1);
+    xdot = zeros(6,1);
     f = zeros(3,1);
     g = zeros(3,1);
     
@@ -25,5 +30,8 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     g(1) = -1/m*(KBf/reff+fB*KBf/reff)*(PBfl+PBfr);
     g(2) = 1/m*delta*KBf/reff*(PBfl+PBfr);
     g(3) = g31*PBfl+g12*PBfr;
-    xdot = f+g;
+    xdot(1:3) = f+g;
+    xdot(4) = V*cos(beta+x(6));
+    xdot(5) = V*sin(beta+x(6));
+    xdot(6) = V*cos(beta)/(a+b)*(tan(delta));
 end
