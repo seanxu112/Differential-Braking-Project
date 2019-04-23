@@ -52,6 +52,7 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     
     %%%%%%%%% Dynamic Equations %%%%%%%%
     xdot = zeros(5,1);
+
     f = zeros(3,1);
     g = zeros(3,1);
     
@@ -69,6 +70,7 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     g(2) = -1/m*delta*KBf/reff*(PBfl+PBfr);
     g(3) = g31*PBfl+g32*PBfr;
     xdot(1:3) = f+g;
+
     xdot(4) = cos(phi_dot)*u - sin(phi_dot)*v;
     xdot(5) = sin(phi_dot)*u + cos(phi_dot)*v;
     
@@ -78,4 +80,5 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     tpp = t_prev;
     t_prev = t;
     delta_prev = delta;
+
 end

@@ -1,0 +1,45 @@
+clc
+close all
+clear all
+
+tmax = 20;
+% delta = @(t) deg2rad(5);%min(deg2rad(20)*t/(tmax-5),deg2rad(20));
+delta =@(t) (5*pi/180*((t>5).* (t<=7))+-5*pi/180*((t>12).* (t<=14)));
+
+x0 = [20 0 0 0 0]';
+tspan = [0 tmax];
+u = [20 20];
+
+Ts = 0;
+=======
+delta = @(t) deg2rad(1);
+%delta = @(t) ...;
+x0 = [10 2 0 0 0 0]';
+tspan = [0 10];
+u = zeros(2,1);
+Ts = 100;
+>>>>>>> parent of 439b2e1... Fixed Problem with Inertial and Body Frame
+
+[t,x] = ode45(@(t,x) vehicle_dynamics_ode(t,x,u,delta(t), Ts), tspan, x0);
+% [t_pos,pos] = ode45(@(t,x) position_ode(t,x,delta(t)), tspan,x0_x);
+figure()
+plot(x(:,4),x(:,5))
+xlim([-50, 150])
+ylim([-50, 150])
+title('Position')
+hold on
+plot(x0(4),x0(5), '*')
+<<<<<<< HEAD
+plot(x_no_brake(:,4),x_no_brake(:,5))
+xlim([-20, 500])
+ylim([-40, 20])
+title('Position')
+plot(x_brake(:,4),x_brake(:,5))
+legend('Initial Position', 'No Brake Trajectory', 'Brake Trjectory' )
+% figure()
+% plot(t_no_brake,x_no_brake(:,4))
+=======
+legend('Initial Position')
+figure()
+plot(t,x(:,4))
+>>>>>>> parent of 439b2e1... Fixed Problem with Inertial and Body Frame
