@@ -1,4 +1,10 @@
-function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
+function xdot = raj_vehicle_dynamics_ode(t,x,u,delta,Ts)
+    persistent ax
+    if isempty(ax)
+        ax = 0;
+    end
+    ax
+    
     vehicle_params;
     PBfl = u(1);    %Brake Pressure of the front left wheel
     PBfr = u(2);    %Brake Pressure of the front right wheel
@@ -7,11 +13,11 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     phi_dot = x(3);     %Yaw Rate
     d = 5;          %Track Width %%%%%%%%%%% Need to Change %%%%%%%
     %delta =         %Some Designed input of steering angle
-    V = sqrt(x(1)^2 + x(2)^2);
-    beta = atan(x(2)/x(1));
-    if (isnan(beta))
-        beta = 0;
-    end
+%     V = sqrt(x(1)^2 + x(2)^2);
+%     beta = atan(x(2)/x(1));
+%     if (isnan(beta))
+%         beta = 0;
+%     end
     
     xdot = zeros(5,1);
     f = zeros(3,1);
@@ -23,7 +29,7 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     f(3) = a/Jz*Cf*(delta-(v+phi_dot*a)/u)-...
                 b/Jz*Cr*((phi_dot*b-v)/u)+a/Jz*Ts/reff*delta;
     
-    ax = f(1);          % Verify
+%     ax = f(1);          % Verify
     fB = calc_rear_brake_pressure_coef(ax);
     g31 = 1/Jz*(d/2*(KBf/reff+fB*KBr/reff)-a*delta*KBf/reff);
     g12 = -1/Jz*(d/2*(KBf/reff+fB*KBr/reff)+a*delta*KBf/reff);
@@ -31,7 +37,10 @@ function xdot = vehicle_dynamics_ode(t,x,u,delta,Ts)
     g(2) = 1/m*delta*KBf/reff*(PBfl+PBfr);
     g(3) = g31*PBfl+g12*PBfr;
     xdot(1:3) = f+g;
-    xdot(4) = cos(phi_dot)- sin(phi_dot)*
-    xdot(5) = V*sin(beta+x(6));
+    xdot(4) = cos(phi_dot)*u - sin(phi_dot)*v;
+    xdot(5) = sin(phi_dot)*u + cos(phi_dot)*v;
+%     xdot(end)
+%     x
+    ax = xdot(1);
 %     xdot(6) = V*cos(beta)/(a+b)*(tan(delta));
 end
