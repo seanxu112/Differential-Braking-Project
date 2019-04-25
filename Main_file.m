@@ -6,7 +6,7 @@ tmax = 20;
 % delta = @(t) deg2rad(5);%min(deg2rad(20)*t/(tmax-5),deg2rad(20));
 delta =@(t) (2*pi/180*((t>5).* (t<=7))+-2*pi/180*((t>12).* (t<=14)));
 
-x0 = [20 0 0 0 0]';
+x0 = [10 0 0 0 0]';
 tspan = [0 tmax];
 u = [50 50];
 
@@ -30,5 +30,3 @@ title('Position')
 legend('Initial Position',  'Brake Trjectory', 'No Brake Trajectory' )
 % figure()
 % plot(t_no_brake,x_no_brake(:,4))
-
-legend('Initial Position')
