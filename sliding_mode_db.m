@@ -15,7 +15,7 @@ function Mz = sliding_mode_db(yaw_d, yaw_des_d, yaw_des_dd, beta, beta_des, beta
     s = yaw_d - yaw_des_d + Xi*(beta- beta_des);
     C1 = (rho+cos(delta))/I_z;
     num = (-ki*s_int - eta*s + yaw_des_dd - Xi*(beta_d - beta_des_d));
-    Mz = num/C1
+    Mz = num/C1;
 %     index_f =  find(cell2mat(cellFxAlpha_front(1,:)) <= abs(alpharf),1,'last');
 %     index_r = 
     if (Mz >= 20E3)

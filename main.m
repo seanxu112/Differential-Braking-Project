@@ -153,7 +153,7 @@ figure (1)
 subplot(2,1,1)
 plot(time,xSMC(2,1:end-1),'Linewidth', 2)
 hold on
-plot(time,vyRef_SMC(1:end),'--','Linewidth', 2)
+plot(time,vyRef_SMC(1:end-1),'--','Linewidth', 2)
 plot(time,xNoESC(2,1:end-1))
 plot(time,vyRef_NoESC(1:end),'--')
 hold off
@@ -207,3 +207,9 @@ legend('Rear Wheel Off', 'Front Wheel Off', 'Rear Wheel On', 'Front Wheel On')
 xlabel('time (sec)')
 ylabel('Slipping Angle (Rad)')
 title('With and Without ESC for Front and Rear Tires')
+
+for i = 1:length(time)
+    
+   simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
+
+end
