@@ -68,7 +68,7 @@ for i = 1:length(time)
     alpha_front_off(i) = deltaF(i) - atan((vy+l_f)/vx); 
     alpha_rear_off(i) = deltaF(i) - atan((vy+l_r)/vx); 
     % Simulation
-    xNoESC(:,i+1) = vehicleDyn(xNoESC(:,i),deltaF(i),0,0,0,0);
+    xNoESC(:,i+1) = vehicleDyn_better(xNoESC(:,i),deltaF(i),0,0,0,0);
 end
 
 
@@ -94,7 +94,7 @@ for i = 1:length(time)
     alpha_front_on(i) = deltaF(i) - atan((vy+l_f)/vx); 
     alpha_rear_on(i) = deltaF(i) - atan((vy+l_r)/vx); 
     % Simulation
-    xESC(:,i+1) = vehicleDyn(xESC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
+    xESC(:,i+1) = vehicleDyn_better(xESC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
 
 end
 
@@ -139,7 +139,7 @@ for i = 1:length(time)
     alpha_front_on(i) = deltaF(i) - atan((vy+l_f)/vx); 
     alpha_rear_on(i) = deltaF(i) - atan((vy+l_r)/vx); 
     % Simulation
-    xSMC(:,i+1) = vehicleDyn(xSMC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
+    xSMC(:,i+1) = vehicleDyn_better(xSMC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
     
     prev_t = t;
     prev_beta = beta;
