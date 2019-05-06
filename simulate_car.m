@@ -7,7 +7,7 @@ function simulate_car(t, x, delta, x_min, x_max, y_min, y_max, traj_vec)
 %read current state
 vx = x(1);
 vy = x(2);
-yaw = x(3);
+yaw = x(3)-pi/2;
 yawRate = x(4);
 X = x(5);
 Y = x(6);
@@ -139,8 +139,9 @@ plot(traj_vec(5,:),traj_vec(6,:),'b')
 ylim([fix(y_min)-5 , fix(y_max)+5])
 xlim([fix(x_min)-5 , fix(x_max)+5])
 grid on
-hold off
 
 set(gcf,'units','normalized','outerposition',[0 0 1 1])
+
+hold off
 
 end
