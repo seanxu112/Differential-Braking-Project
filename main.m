@@ -24,7 +24,7 @@ Tf = 15;                        % End of integration
 time = 0:dt:Tf;                % Integration interval
 
 %% (2) Compute driver steering input
-mag = 20*pi/180; % Driver's steering input magnitude
+mag = 14*pi/180; % Driver's steering input magnitude
 Tfsteer = 0.3; % Driver's steering input final time
 steerT = 0:dt:Tfsteer;
 deltaF = mag*ones(1,length(time));
