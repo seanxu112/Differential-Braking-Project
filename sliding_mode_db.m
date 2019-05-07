@@ -8,7 +8,7 @@ function [Mz,s] = sliding_mode_db(yaw_d, yaw_des_d, yaw_des_dd, beta, beta_des, 
     end
     % Controller Parameters
     rho = 0.5;
-    ki = 1;
+    ki = 0.1;
     eta = 0.3;
     Xi = 0.0005;
     
