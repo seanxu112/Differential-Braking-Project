@@ -29,7 +29,7 @@ K = lqrd(A,B,Q,R,dt); %LQR controller
 
 e_yaw = yawRate - yawRateRef;
 
-amp = 100000*.5;
+amp = 100000;
 
 Mz = amp*K*e_yaw;
  

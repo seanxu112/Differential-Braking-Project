@@ -25,6 +25,7 @@ Tf = 10*num;                        % End of integration
 time = 0:dt:Tf;                % Integration interval
 
 %% (2) Compute driver steering input
+<<<<<<< HEAD
 
 % mag = 14*pi/180; % Driver's steering input magnitude
 % Tfsteer = 0.3; % Driver's steering input final time
@@ -33,6 +34,14 @@ time = 0:dt:Tf;                % Integration interval
 % deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
 
 % Define time intervals
+=======
+mag = 20*pi/180; % Driver's steering input magnitude
+Tfsteer = 0.3; % Driver's steering input final time
+steerT = 0:dt:Tfsteer;
+deltaF = mag*ones(1,length(time));
+deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
+% test
+>>>>>>> parent of 772c6d6... Merge branch 'master' of https://github.com/seanxu112/Differential-Braking-Project
 t0 = 1;
 t1 = floor(length(time) / 4/num);
 t2 = floor(length(time) / 2.25);
