@@ -29,7 +29,25 @@ Tfsteer = 0.3; % Driver's steering input final time
 steerT = 0:dt:Tfsteer;
 deltaF = mag*ones(1,length(time));
 deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
+% test
+t0 = 1;
+t1 = floor(length(time) / 4);
+t2 = floor(length(time) / 2.25);
+t3 = floor(length(time) * (3/4));
+t4 = floor(length(time));
 
+deltaF = zeros(1,length(time));
+for k = t0:t1
+    deltaF(1,k) = compute_steering_angle(10000);
+end
+
+for k = t1:t2
+    deltaF(1,k) = compute_steering_angle(-10);
+end
+
+for k = t2:t4
+    deltaF(1,k) = compute_steering_angle(10000);
+end
 %% (3) Reference Test
 % Commented out because this code is not necessary - MW 20190505
 % [yawRateRef1, vyRef1] = referenceGen(5*pi/180,10);
