@@ -64,6 +64,8 @@ xSMC(:,1) = x0';
 xlqr(:,1) = x0';
 alpha_front_off = zeros(size(time));
 alpha_rear_off = zeros(size(time));
+xFL = zeros(6,length(time)+1);
+xFL(:,1) = x0';
 
 %% (5) Run Simulations with ESC OFF
 for i = 1:length(time)
@@ -193,6 +195,59 @@ for i = 1:length(time)
 end
 figure(5)
 plot(s_vec)
+
+%% (8) Run Close-Loop Simulations with Feedback Linearization controller ON
+
+vx = xFL(1,1);
+[yawRateRef_prev, ~, betaRef_prev] = referenceGen(deltaF(1),vx);
+prev_t = 0;
+% prev_beta = 0;
+
+
+for i = 1:length(time)
+    %read current state
+    vx = xFL(1,i);
+    vy = xFL(2,i);
+    yaw = xFL(3,i);
+    yawRate = xFL(4,i);
+    X = xFL(5,i);
+    Y = xFL(6,i);
+    t = time(i);
+    
+    % Reference generator
+    [yawRateRef_FL(i), vyRef_FL(i), betaRef_FL] = referenceGen(deltaF(i),vx);
+    yaw_des_dd = derivative_estimation([yawRateRef_prev, yawRateRef_FL(i)], [prev_t, t]);
+    if (vy ~=0)
+        beta = atan(vx/vy);
+    else 
+        beta = 0;
+    end
+    if (i==1)
+        prev_beta = beta;
+    end
+    
+    beta_d = derivative_estimation([prev_beta, beta], [prev_t,t]);
+    beta_des_d = derivative_estimation([betaRef_prev, betaRef_FL], [prev_t, t]);
+    
+%     Mz =  sliding_mode_db(yawRate, yawRateRef_SMC(i), yaw_des_dd, beta, betaRef_FL, beta_d, beta_des_d, deltaF(i));
+%     Mz = ESCdlqr(yawRateRef_ESC(i),vyRef_ESC(i),yawRate,vy,vx)
+    Mz = ESC_feedback_linearization(yawRate, yawRateRef_prev, yaw_des_dd, deltaF(i), vy, yawRate,vx);
+        
+    % Braking logic
+    [Fxlf, Fxlr, Fxrf, Fxrr] = brakingLogic(Mz,vx,vy,yawRate,deltaF(i));
+    
+    alpha_front_on(i) = deltaF(i) - atan((vy+l_f)/vx); 
+    alpha_rear_on(i) = deltaF(i) - atan((vy+l_r)/vx); 
+    % Simulation
+    xFL(:,i+1) = vehicleDyn_better(xFL(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
+    
+    prev_t = t;
+    prev_beta = beta;
+    yawRateRef_prev = yawRateRef_FL(i);
+    betaRef_prev = betaRef_FL;
+    
+end
+
 %% (8) Plot Routines 
 figure (1)
 subplot(2,1,1)
@@ -223,6 +278,7 @@ hold on
 plot(xNoESC(5,:),xNoESC(6,:))
 plot(xESC(5,:), xESC(6,:))
 plot(xlqr(5,:), xlqr(6,:),'g')
+plot(xFL(5,:), xFL(6,:),'r');
 plot([xESC(5,1)+l_f*cos(xESC(3,1)), xESC(5,1)-l_r*cos(xESC(3,1))],...
     [xESC(6,1)+l_f*sin(xESC(3,1)),xESC(6,1)-l_r*sin(xESC(3,1))],'c','LineWidth',2)
 plot([xESC(5,end)+l_f*cos(xESC(3,end)), xESC(5,end)-l_r*cos(xESC(3,end))],...
