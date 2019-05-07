@@ -20,18 +20,18 @@ function Mz = ESC_feedback_linearization(yaw_d, yaw_des_d, yaw_des_dd, delta, vy
     e = yaw_des_d - yaw_d;
     
     denominator = (cos(delta) + rho);
-    nominator = I_z * (yaw_des_dd + e) - f ;
+%     nominator = I_z * (yaw_des_dd + e) - f ;
     
-%     nominator = I_z * ( (yaw_des_dd + .0001*e) - f );
+    nominator = I_z * ( (yaw_des_dd + .5*e) - f );
     
     Mz = nominator / denominator;
     
     
-%     if (Mz >= 20E3)
-%     %         Mz = min( max(cellFxAlpha_rear{2, index_r}(end,:)),max(cellFxAlpha_front{2, index_f}(end,:)));
-%         Mz = 20E3;
-%         
-%         warning('Mz at maximum')
-%     end
+    if (Mz >= 20E3)
+    %         Mz = min( max(cellFxAlpha_rear{2, index_r}(end,:)),max(cellFxAlpha_front{2, index_f}(end,:)));
+        Mz = 20E3;
+        
+        warning('Mz at maximum')
+    end
 end
 

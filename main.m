@@ -1,4 +1,4 @@
-% clear all
+clear all
 close all
 clc
 
@@ -20,25 +20,29 @@ l_r = L - l_f; % distance between c.g. and rear axle (m)
 % m_r = m/L*l_f; % vehicle rear mass (kg)
 I_z = 5550.045; % yaw moment of inertia
 dt = 0.01;                     % sampling rate
-Tf = 15;                        % End of integration
+num = 2;
+Tf = 10*num;                        % End of integration
 time = 0:dt:Tf;                % Integration interval
 
 %% (2) Compute driver steering input
-mag = 14*pi/180; % Driver's steering input magnitude
-Tfsteer = 0.3; % Driver's steering input final time
-steerT = 0:dt:Tfsteer;
-deltaF = mag*ones(1,length(time));
-deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
-% test
+
+% mag = 14*pi/180; % Driver's steering input magnitude
+% Tfsteer = 0.3; % Driver's steering input final time
+% steerT = 0:dt:Tfsteer;
+% deltaF = mag*ones(1,length(time));
+% deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
+
+% Define time intervals
 t0 = 1;
-t1 = floor(length(time) / 4);
+t1 = floor(length(time) / 4/num);
 t2 = floor(length(time) / 2.25);
 t3 = floor(length(time) * (3/4));
 t4 = floor(length(time));
 
 deltaF = zeros(1,length(time));
+
 for k = t0:t1
-    deltaF(1,k) = compute_steering_angle(10000);
+    deltaF(1,k) = 0;%compute_steering_angle(10000);
 end
 
 for k = t1:t2
@@ -48,12 +52,6 @@ end
 for k = t2:t4
     deltaF(1,k) = compute_steering_angle(10000);
 end
-%% (3) Reference Test
-% Commented out because this code is not necessary - MW 20190505
-% [yawRateRef1, vyRef1] = referenceGen(5*pi/180,10);
-% [yawRateRef2, vyRef2] = referenceGen(30*pi/180,8);
-% disp(['yawRateRef1, vyRef1 = ', num2str(yawRateRef1), ', ' num2str(vyRef1)]);
-% disp(['yawRateRef2, vyRef2 = ', num2str(yawRateRef2), ', ' num2str(vyRef2)]);
 
 %% (4) Set Initial Conditions
 
@@ -135,30 +133,30 @@ end
 
 %% Old code
 
-for i = 1:length(time)
-    %read current state
-    vx = xESC(1,i);
-    vy = xESC(2,i);
-    yaw = xESC(3,i);
-    yawRate = xESC(4,i);
-    X = xESC(5,i);
-    Y = xESC(6,i);
-    
-    % Reference generator
-    [yawRateRef_ESC(i), vyRef_ESC(i), ~] = referenceGen(deltaF(i),vx);
-    
-    % Discrete-time LQR controller
-    Mz = ESCdlqr(yawRateRef_ESC(i),vyRef_ESC(i),yawRate,vy,vx);
-    
-    % Braking logic
-    [Fxlf, Fxlr, Fxrf, Fxrr] = brakingLogic(Mz,vx,vy,yawRate,deltaF(i));
-    
-    alpha_front_on(i) = deltaF(i) - atan((vy+l_f)/vx); 
-    alpha_rear_on(i) = deltaF(i) - atan((vy+l_r)/vx); 
-    % Simulation
-    xESC(:,i+1) = vehicleDyn_better(xESC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
-
-end
+% for i = 1:length(time)
+%     %read current state
+%     vx = xESC(1,i);
+%     vy = xESC(2,i);
+%     yaw = xESC(3,i);
+%     yawRate = xESC(4,i);
+%     X = xESC(5,i);
+%     Y = xESC(6,i);
+%     
+%     % Reference generator
+%     [yawRateRef_ESC(i), vyRef_ESC(i), ~] = referenceGen(deltaF(i),vx);
+%     
+%     % Discrete-time LQR controller
+%     Mz = ESCdlqr(yawRateRef_ESC(i),vyRef_ESC(i),yawRate,vy,vx);
+%     
+%     % Braking logic
+%     [Fxlf, Fxlr, Fxrf, Fxrr] = brakingLogic(Mz,vx,vy,yawRate,deltaF(i));
+%     
+%     alpha_front_on(i) = deltaF(i) - atan((vy+l_f)/vx); 
+%     alpha_rear_on(i) = deltaF(i) - atan((vy+l_r)/vx); 
+%     % Simulation
+%     xESC(:,i+1) = vehicleDyn_better(xESC(:,i),deltaF(i),Fxlf,Fxlr,Fxrf,Fxrr);
+% 
+% end
 
 %% (7) Run Close-Loop Simulations with SMC ESC ON
 
@@ -268,27 +266,32 @@ end
 
 %% (8) Plot Routines 
 figure (1)
-subplot(2,1,1)
-plot(time,xSMC(2,1:end-1),'Linewidth', 2)
+% subplot(2,1,1)
+% plot(time,xSMC(2,1:end-1),'Linewidth', 2)
+% hold on
+% plot(time,vyRef_SMC(1:end-1),'--','Linewidth', 2)
+% plot(time,xNoESC(2,1:end-1))
+% plot(time,vyRef_NoESC(1:end),'--')
+% hold off
+% xlabel('time (sec)')
+% ylabel('v_y (m/s)')
+% legend('v_y (ESC on)','v_y ref (ESC on)', 'v_y (ESC off)','v_y ref (ESC off)')
+% legend('Location','southeast')
+% subplot(2,1,2)
+plot(time,xSMC(4,1:end-1))%,'Linewidth', 2)
 hold on
-plot(time,vyRef_SMC(1:end-1),'--','Linewidth', 2)
-plot(time,xNoESC(2,1:end-1))
-plot(time,vyRef_NoESC(1:end),'--')
-hold off
-xlabel('time (sec)')
-ylabel('v_y (m/s)')
-legend('v_y (ESC on)','v_y ref (ESC on)', 'v_y (ESC off)','v_y ref (ESC off)')
-legend('Location','southeast')
-subplot(2,1,2)
-plot(time,xSMC(4,1:end-1),'Linewidth', 2)
-hold on
-plot(time,yawRateRef_SMC(1:end),'--','Linewidth', 2)
+plot(time,yawRateRef_SMC(1:end),'--')%,'Linewidth', 2)
 plot(time,xNoESC(4,1:end-1))
 plot(time,yawRateRef_NoESC(1:end),'--')
+plot(time,xlqr(4,1:end-1))
+plot(time,yawRateRef_lqr(1:end),'--')
+plot(time,xFL(4,1:end-1))
+plot(time,yawRateRef_FL(1:end),'--')
 xlabel('time (sec)')
 ylabel('yaw rate (rad/s)')
-legend('yaw rate (ESC on)','yaw rate ref (ESC on)', 'yaw rate (ESC off)','yaw rate ref (ESC off)')
-legend('Location','southeast')
+ylim([-1,.5])
+% legend('yaw rate (ESC on)','yaw rate ref (ESC on)', 'yaw rate (ESC off)','yaw rate ref (ESC off)')
+% legend('Location','northeast')
 
 figure (2)
 plot(xSMC(5,:),xSMC(6,:))
@@ -330,8 +333,8 @@ xlabel('time (sec)')
 ylabel('Slipping Angle (Rad)')
 title('With and Without ESC for Front and Rear Tires')
 
-for i = 1:2:length(time)
-    
-   simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
-
-end
+% for i = 1:2:length(time)
+%     
+%    simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
+% 
+% end
