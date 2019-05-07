@@ -1,4 +1,4 @@
-clear all
+% clear all
 close all
 clc
 
@@ -20,15 +20,15 @@ l_r = L - l_f; % distance between c.g. and rear axle (m)
 % m_r = m/L*l_f; % vehicle rear mass (kg)
 I_z = 5550.045; % yaw moment of inertia
 dt = 0.01;                     % sampling rate
-Tf = 5;                        % End of integration
+Tf = 15;                        % End of integration
 time = 0:dt:Tf;                % Integration interval
 
 %% (2) Compute driver steering input
-mag = 14*pi/180; % Driver's steering input magnitude
+mag = 20*pi/180; % Driver's steering input magnitude
 Tfsteer = 0.3; % Driver's steering input final time
 steerT = 0:dt:Tfsteer;
 deltaF = mag*ones(1,length(time));
-% deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
+deltaF(1:length(steerT)) = mag/2-mag/2*cos(pi/Tfsteer*steerT);
 
 %% (3) Reference Test
 % Commented out because this code is not necessary - MW 20190505
