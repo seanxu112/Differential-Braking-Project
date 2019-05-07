@@ -1,0 +1,9 @@
+syms ddphi Iz l_f Fyfl Fyfr deltaF l_r Fyrl Fyrr Mz
+
+fx = (1/Iz)*(l_f*(Fyfl + Fyfr)*cos(deltaF) - l_r*(Fyrl + Fyrr));
+
+gx = (1/Iz)*(cos(deltaF)+.5)*Mz;
+
+Fyfl = 
+
+A = jacobian 
