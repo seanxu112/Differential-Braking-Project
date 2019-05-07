@@ -1,5 +1,5 @@
 function xplus = vehicleDyn_better(x,deltaF,Fxlf,Fxlr,Fxrf,Fxrr)
-global m l_f l_r I_z W dt mue g
+global m l_f l_r I_z W dt mue g C_r C_f
 global cellFxAlpha_front cellFxAlpha_rear cellFySigma_front cellFySigma_rear
 
 Fzlf = mue*m*g*l_r/(l_r+l_f)/2;
@@ -73,6 +73,9 @@ else
         index2 = find(cell2mat(cellFySigma_rear(1,:)) <= abs(sigmalr),1,'last');
         Fylr = interp1(cellFySigma_rear{2, index2}(1,:),cellFySigma_rear{2, index2}(2,:),alphalr);
     end
+
+%     Fyrl_test = .5*2*C_r*( - ( x(2) - l_r*x(4) )/x(1));
+
 end
 %% right-front tire
 alpharf = deltaF - atan(vyrf/vxrf);
@@ -102,6 +105,9 @@ else
         index2 = find(cell2mat(cellFySigma_front(1,:)) <= abs(sigmarf),1,'last');
         Fyrf = interp1(cellFySigma_front{2, index2}(1,:),cellFySigma_front{2, index2}(2,:),alpharf);
     end
+    
+%     Fyfr_test = .5*2*C_f*(deltaF - ( x(2) + l_f*x(4) )/x(1));
+    
 end
 %% right-rear tire
 alpharr = - atan(vyrr/vxrr);

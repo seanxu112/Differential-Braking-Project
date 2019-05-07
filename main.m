@@ -256,8 +256,8 @@ xlabel('time (sec)')
 ylabel('Slipping Angle (Rad)')
 title('With and Without ESC for Front and Rear Tires')
 
-% for i = 1:2:length(time)
-%     
-%    simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
-% 
-% end
+for i = 1:2:length(time)
+    
+   simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
+
+end
