@@ -7,7 +7,7 @@ function simulate_car(t, x, delta, x_min, x_max, y_min, y_max, traj_vec)
 %read current state
 vx = x(1);
 vy = x(2);
-yaw = x(3)-pi/2;
+yaw = x(3)-pi/2; %rotate by 90 degrees to correct for body frame coordinates
 yawRate = x(4);
 X = x(5);
 Y = x(6);
