@@ -115,7 +115,8 @@ vx = xSMC(1,1);
 [yawRateRef_prev, ~, betaRef_prev] = referenceGen(deltaF(1),vx);
 prev_t = 0;
 % prev_beta = 0;
-
+Mz_vec = [];
+s_vec = [];
 for i = 1:length(time)
     %read current state
     vx = xSMC(1,i);
@@ -141,9 +142,10 @@ for i = 1:length(time)
     beta_des_d = derivative_estimation([betaRef_prev, betaRef_SMC], [prev_t, t]);
     
     % Discrete-time LQR controller
-    Mz =  sliding_mode_db(yawRate, yawRateRef_SMC(i), yaw_des_dd, beta, betaRef_SMC, beta_d, beta_des_d, deltaF(i));
+    [Mz,s] =  sliding_mode_db(yawRate, yawRateRef_SMC(i), yaw_des_dd, beta, betaRef_SMC, beta_d, beta_des_d, deltaF(i));
 %     Mz = ESCdlqr(yawRateRef_ESC(i),vyRef_ESC(i),yawRate,vy,vx)
-    
+    Mz_vec = [Mz_vec, Mz];
+    s_vec = [s_vec, s];
     % Braking logic
     [Fxlf, Fxlr, Fxrf, Fxrr] = brakingLogic(Mz,vx,vy,yawRate,deltaF(i));
     
@@ -158,7 +160,8 @@ for i = 1:length(time)
     betaRef_prev = betaRef_SMC;
     
 end
-
+figure(5)
+plot(s_vec)
 %% (8) Plot Routines 
 figure (1)
 subplot(2,1,1)

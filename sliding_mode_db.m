@@ -1,4 +1,4 @@
-function Mz = sliding_mode_db(yaw_d, yaw_des_d, yaw_des_dd, beta, beta_des, beta_d, beta_des_d, delta)
+function [Mz,s] = sliding_mode_db(yaw_d, yaw_des_d, yaw_des_dd, beta, beta_des, beta_d, beta_des_d, delta)
     global dt I_z 
     global cellFxAlpha_front cellFxAlpha_rear cellFySigma_front cellFySigma_rear
 
