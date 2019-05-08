@@ -20,7 +20,7 @@ l_r = L - l_f; % distance between c.g. and rear axle (m)
 % m_r = m/L*l_f; % vehicle rear mass (kg)
 I_z = 5550.045; % yaw moment of inertia
 dt = 0.01;                     % sampling rate
-num = 2;
+num = 1.2;
 Tf = 10*num;                        % End of integration
 time = 0:dt:Tf;                % Integration interval
 
@@ -210,8 +210,8 @@ for i = 1:length(time)
     betaRef_prev = betaRef_SMC;
     
 end
-figure(5)
-plot(s_vec)
+% figure(5)
+% plot(s_vec)
 
 %% (8) Run Close-Loop Simulations with Feedback Linearization controller ON
 
@@ -266,7 +266,7 @@ for i = 1:length(time)
 end
 
 %% (8) Plot Routines 
-figure (1)
+% % figure (1)
 % subplot(2,1,1)
 % plot(time,xSMC(2,1:end-1),'Linewidth', 2)
 % hold on
@@ -279,63 +279,144 @@ figure (1)
 % legend('v_y (ESC on)','v_y ref (ESC on)', 'v_y (ESC off)','v_y ref (ESC off)')
 % legend('Location','southeast')
 % subplot(2,1,2)
-plot(time,xSMC(4,1:end-1))%,'Linewidth', 2)
-hold on
-plot(time,yawRateRef_SMC(1:end),'--')%,'Linewidth', 2)
-plot(time,xNoESC(4,1:end-1))
-plot(time,yawRateRef_NoESC(1:end),'--')
-plot(time,xlqr(4,1:end-1))
-plot(time,yawRateRef_lqr(1:end),'--')
-plot(time,xFL(4,1:end-1))
-plot(time,yawRateRef_FL(1:end),'--')
-xlabel('time (sec)')
-ylabel('yaw rate (rad/s)')
-ylim([-1,.5])
+% % plot(time,xSMC(4,1:end-1))%,'Linewidth', 2)
+% % hold on
+% % plot(time,yawRateRef_SMC(1:end),'--')%,'Linewidth', 2)
+% % plot(time,xNoESC(4,1:end-1))
+% % plot(time,yawRateRef_NoESC(1:end),'--')
+% % plot(time,xlqr(4,1:end-1))
+% % plot(time,yawRateRef_lqr(1:end),'--')
+% % plot(time,xFL(4,1:end-1))
+% % plot(time,yawRateRef_FL(1:end),'--')
+% % xlabel('time (sec)')
+% % ylabel('yaw rate (rad/s)')
+% % ylim([-1,.5])
 % legend('yaw rate (ESC on)','yaw rate ref (ESC on)', 'yaw rate (ESC off)','yaw rate ref (ESC off)')
 % legend('Location','northeast')
 
-figure (2)
-plot(xSMC(5,:),xSMC(6,:))
+figure (1)
+plot(time,xNoESC(4,1:end-1),'r','linewidth', 2)
 hold on
-plot(xNoESC(5,:),xNoESC(6,:))
-plot(xESC(5,:), xESC(6,:))
-plot(xlqr(5,:), xlqr(6,:),'g')
-plot(xFL(5,:), xFL(6,:),'r');
-plot([xESC(5,1)+l_f*cos(xESC(3,1)), xESC(5,1)-l_r*cos(xESC(3,1))],...
-    [xESC(6,1)+l_f*sin(xESC(3,1)),xESC(6,1)-l_r*sin(xESC(3,1))],'c','LineWidth',2)
-plot([xESC(5,end)+l_f*cos(xESC(3,end)), xESC(5,end)-l_r*cos(xESC(3,end))],...
-    [xESC(6,end)+l_f*sin(xESC(3,end)),xESC(6,end)-l_r*sin(xESC(3,end))],'c','LineWidth',2)
-plot([xNoESC(5,end)+l_f*cos(xNoESC(3,end)), xNoESC(5,end)-l_r*cos(xNoESC(3,end))],...
-    [xNoESC(6,end)+l_f*sin(xNoESC(3,end)),xNoESC(6,end)-l_r*sin(xNoESC(3,end))],'c','LineWidth',2)
-% plot([xlqr(5,end)+l_f*cos(xlqr(3,end)), xlqr(5,end)-l_r*cos(xlqr(3,end))],...
-%     [xlqr(6,end)+l_f*sin(xlqr(3,end)),xlqr(6,end)-l_r*sin(xlqr(3,end))],'c','LineWidth',2)
-xlabel('X (m)');
-ylabel('Y (m)');
-legend('Traj. with ESC on','Traj. with ESC off')
+plot(time,yawRateRef_NoESC(1:end),'--r','linewidth', 2)
+plot(time,xSMC(4,1:end-1),'b','linewidth', 2)
+plot(time,yawRateRef_SMC(1:end),'--b','linewidth', 2)
+xlabel('time (sec)')
+ylabel('yaw rate (rad/s)')
+ylim([-.75,.25])
+xlim([0, 6])
+legend('yaw rate (ESC off)','yaw rate ref (ESC off)', 'yaw rate (SMC on)','yaw rate ref (SMC on)')
+legend('Location','northeast')
+
+figure (2)
+plot(time,xNoESC(4,1:end-1),'r','linewidth', 2)
+hold on
+plot(time,yawRateRef_NoESC(1:end),'--r','linewidth', 2)
+plot(time,xlqr(4,1:end-1),'b','linewidth', 2)
+plot(time,yawRateRef_lqr(1:end),'--b','linewidth', 2)
+xlabel('time (sec)')
+ylabel('yaw rate (rad/s)')
+ylim([-.75,.25])
+xlim([0, 6])
+legend('yaw rate (ESC off)','yaw rate ref (ESC off)', 'yaw rate (LQR on)','yaw rate ref (LQR on)')
+legend('Location','northeast')
 
 figure (3)
-plot(time,xESC(3,1:end-1)*180/pi)
+plot(time,xNoESC(4,1:end-1),'r','linewidth', 2)
 hold on
-plot(time,xNoESC(3,1:end-1)*180/pi)
+plot(time,yawRateRef_NoESC(1:end),'--r','linewidth', 2)
+plot(time,xFL(4,1:end-1),'b','linewidth', 2)
+plot(time,yawRateRef_FL(1:end),'--b','linewidth', 2)
 xlabel('time (sec)')
-ylabel('yaw (deg)')
-legend('yaw with ESC on(deg)','yaw with ESC off(deg)')
+ylabel('yaw rate (rad/s)')
+ylim([-.75,.25])
+xlim([0, 6])
+legend('yaw rate (ESC off)','yaw rate ref (ESC off)', 'yaw rate (FL on)','yaw rate ref (FL on)')
+legend('Location','northeast')
+
+figure (4)
+plot(time,xSMC(4,1:end-1),'b','Linewidth', 2)%,'Linewidth', 2)
+hold on
+plot(time,yawRateRef_SMC(1:end),'--b','Linewidth', 2)%,'Linewidth', 2)
+plot(time,xNoESC(4,1:end-1),'r','Linewidth', 2)
+plot(time,yawRateRef_NoESC(1:end),'--r','Linewidth', 2)
+plot(time,xlqr(4,1:end-1),'g','Linewidth', 2)
+plot(time,yawRateRef_lqr(1:end),'--g','Linewidth', 2)
+plot(time,xFL(4,1:end-1),'m','Linewidth', 2)
+plot(time,yawRateRef_FL(1:end),'--m','Linewidth', 2)
+xlabel('time (sec)')
+ylabel('yaw rate (rad/s)')
+ylim([-.7,.1])
+xlim([0, 6])
+legend('yaw rate (SMC on)','yaw rate ref (SMC on)', 'yaw rate (ESC off)','yaw rate ref (ESC off)', 'yaw rate (LQR on)','yaw rate ref (LQR on)', 'yaw rate (FL on)','yaw rate ref (FL on)')
+legend('Location','northeast')
+
+figure (6)
+plot(xSMC(5,:),xSMC(6,:),'r','linewidth',2)
+hold on
+plot(xNoESC(5,:),xNoESC(6,:),'m','linewidth',2)
+plot(xlqr(5,:), xlqr(6,:),'g','linewidth',2)
+plot(xFL(5,:), xFL(6,:),'b','linewidth',2);
+xlabel('X (m)');
+ylabel('Y (m)');
+legend('Traj. with SMC on','Traj. with ESC off','Traj. with LQR on','Traj. with FL on')
 legend('Location','southeast')
 
-%%
-figure(4)
+figure (7)
+plot(xNoESC(5,:),xNoESC(6,:),'r','linewidth',2)
 hold on
-plot(time,alpha_rear_off)
-plot(time,alpha_front_off)
-plot(time,alpha_rear_on)
-plot(time,alpha_front_on)
-legend('Rear Wheel Off', 'Front Wheel Off', 'Rear Wheel On', 'Front Wheel On')
-xlabel('time (sec)')
-ylabel('Slipping Angle (Rad)')
-title('With and Without ESC for Front and Rear Tires')
+plot(xSMC(5,:),xSMC(6,:),'b','linewidth',2)
+xlabel('X (m)');
+ylabel('Y (m)');
+legend('Traj. with ESC off','Traj. with SMC on')
+legend('Location','southeast')
 
-% for i = 1:2:length(time)
-%     
-%    simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
+figure (8)
+plot(xNoESC(5,:),xNoESC(6,:),'r','linewidth',2)
+hold on
+plot(xlqr(5,:), xlqr(6,:),'b','linewidth',2)
+xlabel('X (m)');
+ylabel('Y (m)');
+legend('Traj. with ESC off','Traj. with LQR on')
+legend('Location','southeast')
+
+figure (9)
+plot(xNoESC(5,:),xNoESC(6,:),'r','linewidth',2)
+hold on
+plot(xFL(5,:), xFL(6,:),'b','linewidth',2)
+xlabel('X (m)');
+ylabel('Y (m)');
+legend('Traj. with ESC off','Traj. with FL on')
+legend('Location','southeast')
+
+% figure (3)
+% plot(time,xESC(3,1:end-1)*180/pi)
+% hold on
+% plot(time,xNoESC(3,1:end-1)*180/pi)
+% xlabel('time (sec)')
+% ylabel('yaw (deg)')
+% legend('yaw with ESC on(deg)','yaw with ESC off(deg)')
+% legend('Location','southeast')
 % 
-% end
+% %%
+% figure(4)
+% hold on
+% plot(time,alpha_rear_off)
+% plot(time,alpha_front_off)
+% plot(time,alpha_rear_on)
+% plot(time,alpha_front_on)
+% legend('Rear Wheel Off', 'Front Wheel Off', 'Rear Wheel On', 'Front Wheel On')
+% xlabel('time (sec)')
+% ylabel('Slipping Angle (Rad)')
+% title('With and Without ESC for Front and Rear Tires')
+
+global marker
+
+marker = 1;
+
+figure(5)
+
+for i = 1:6:length(time)
+    
+   simulate_car(time(i), xSMC(:,i), deltaF(i), min(xSMC(5,:)), max(xSMC(5,:)), min(xSMC(6,:)), max(xSMC(6,:)), xSMC)
+
+end

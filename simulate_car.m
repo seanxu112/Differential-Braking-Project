@@ -114,6 +114,7 @@ axis_max_y = 30;
 axis_min_x = -2;
 axis_max_x = 20;
 
+global marker
 
 figure(5)
 plot(car_outline(:,1),car_outline(:,2),'b')
@@ -143,5 +144,13 @@ grid on
 set(gcf,'units','normalized','outerposition',[0 0 1 1])
 
 hold off
+
+if marker == 1
+    
+    pause(10);
+    
+    marker = 0;
+    
+end
 
 end
